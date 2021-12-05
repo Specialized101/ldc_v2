@@ -21,19 +21,19 @@ int main()
     client5 = client_new("Musk", "Elon", 5);
     client6 = client_new("Tesla", "Nicolas", 6);
 
-    ldc_insert(list, client1, client_compare);
-    ldc_insert(list, client2, client_compare);
-    ldc_insert(list, client3, client_compare);
-    ldc_insert(list, client4, client_compare);
     ldc_insert(list, client5, client_compare);
+    ldc_insert(list, client1, client_compare);
     ldc_insert(list, client6, client_compare);
+    ldc_insert(list, client3, client_compare);
+    ldc_insert(list, client2, client_compare);
+    ldc_insert(list, client4, client_compare);
 
-    //ldc_display_asc(list, client_display);
-    ldc_display_desc(list, client_display);
+    ldc_display_asc(list, client_display);
+    //ldc_display_desc(list, client_display);
 
     ldc_remove(list, client1, client_compare, client_del);
-    ldc_remove(list, client2, client_compare, client_del);
     ldc_remove(list, client4, client_compare, client_del);
+    ldc_remove(list, client2, client_compare, client_del);
 
     ldc_display_asc(list, client_display);
 

@@ -65,13 +65,7 @@ void ldc_insert(struct Ldc* p_list, void* p_data, int (*p_compare)(void* p_data1
 
 	int found = 0;
 
-	for (int i = 0; i < p_list->length - 2 || found == 1; i++) {
-
-		if (p_compare(cell_get_data(p_temp), p_data) == 1) {
-
-			found = 1;
-
-		}
+	while (p_temp != p_list->p_tail && p_compare(p_data, cell_get_data(p_temp)) >= 0) {
 
 		/* Passer à la cellule suivante */
 

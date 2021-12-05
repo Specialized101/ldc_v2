@@ -33,13 +33,7 @@ int client_compare(void* p_client1, void* p_client2) {
 	struct Client* p_cli1 = (struct Client*)p_client1;
 	struct Client* p_cli2 = (struct Client*)p_client2;
 
-	if (p_cli1->num_client < p_cli2->num_client)
-		return -1;
-
-	else if (p_cli1->num_client > p_cli2->num_client)
-		return 1;
-
-	return 0;
+	return p_cli1->num_client - p_cli2->num_client;
 
 }
 
