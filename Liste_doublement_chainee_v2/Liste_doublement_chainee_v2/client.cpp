@@ -28,52 +28,36 @@ struct Client* client_new(const char* nom, const char* prenom, int num_client) {
 
 }
 
-int* client_get_id(struct Client* p_client) {
+int client_compare(void* p_client1, void* p_client2) {
 
-	return &p_client->num_client;
+	struct Client* p_cli1 = (struct Client*)p_client1;
+	struct Client* p_cli2 = (struct Client*)p_client2;
 
-}
-
-char* client_get_firstname(struct Client* p_client) {
-
-	return p_client->prenom;
-
-}
-char* client_get_lastname(struct Client* p_client) {
-
-	return p_client->nom;
-
-}
-
-int client_compare(struct Client* p_client1, struct Client* p_client2) {
-
-	if (p_client1->num_client < p_client2->num_client)
+	if (p_cli1->num_client < p_cli2->num_client)
 		return -1;
 
-	else if (p_client1->num_client > p_client2->num_client)
+	else if (p_cli1->num_client > p_cli2->num_client)
 		return 1;
 
 	return 0;
 
 }
 
-void client_display(struct Client* p_client) {
+void client_display(void* p_client) {
 
-	printf("\nNom: %s\n", p_client->nom);
-	printf("Prenom: %s\n", p_client->prenom);
-	printf("Numero_client: %d\n", p_client->num_client);
+	struct Client* p_cli = (struct Client*) p_client;
+
+	printf("\nNom: %s\n", p_cli->nom);
+	printf("Prenom: %s\n", p_cli->prenom);
+	printf("Numero_client: %d\n", p_cli->num_client);
 
 }
 
-struct Client* client_del(struct Client* p_client) {
+void client_del(void* p_client) {
 
-	if (p_client != NULL) {
+	struct Client* p_cli = (struct Client*)p_client;
 
-		free(p_client);
-		p_client = NULL;
-
-	}
-
-	return p_client;
+	free(p_cli);
+	p_cli = NULL;
 
 }

@@ -3,7 +3,7 @@
 #include "cell.h"
 #include "client.h"
 
-struct Cell* cell_new(struct Client* p_client) {
+struct Cell* cell_new(void* p_data) {
 
 	/* Allouer un espace memoire pour une nouvelle cellule */
 
@@ -13,9 +13,9 @@ struct Cell* cell_new(struct Client* p_client) {
 
 	if (p_new != NULL) {
 
-		/* Initialiser les données membres de nouvelle cellule avec le client donnée en parametre */
+		/* Initialiser les données membres de nouvelle cellule avec les donnees en parametre */
 
-		p_new->client = p_client;
+		p_new->p_data = p_data;
 		p_new->p_next = NULL;
 		p_new->p_prev = NULL;
 
@@ -65,29 +65,29 @@ void cell_chaining_update_before_deletion(struct Cell* p_cell) {
 
 }
 
-struct Client* cell_get_client(struct Cell* p_cell) {
+void* cell_get_data(struct Cell* p_cell) {
 
-	return p_cell->client;
-
-}
-
-void cell_display(struct Cell* p_cell) {
-
-	client_display(p_cell->client);
+	return p_cell->p_data;
 
 }
 
-struct Cell* cell_del(struct Cell* p_cell) {
+void cell_display(struct Cell* p_cell, void (*p_display)(void* p_data)) {
 
-	if (p_cell != NULL) {
+	p_display(p_cell->p_data);
 
-		client_del(p_cell->client);
+}
 
-		free(p_cell);
-		p_cell = NULL;
+void cell_del(struct Cell* p_cell, void (*p_del)(void* p_data)) {
 
-	}
+	if (p_cell == NULL) return;
 
-	return p_cell;
+	/* Si p_del est NULL -> Cellule vide -> pas de donnee à supprimer */
+
+	if (p_del != NULL)
+		
+		p_del(p_cell->p_data);
+
+	free(p_cell);
+	p_cell = NULL;
 
 }
