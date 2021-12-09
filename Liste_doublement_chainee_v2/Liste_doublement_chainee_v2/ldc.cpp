@@ -3,7 +3,6 @@
 
 #include "ldc.h"
 #include "cell.h"
-#include "client.h"
 
 
 struct Ldc* ldc_new() {
@@ -157,7 +156,7 @@ int ldc_is_data_in_list(struct Ldc* p_list, void* p_data, int (*p_compare)(void*
 
 	/* Boucler autant de fois qu'il y a de donnees de la liste (-2 cellules vides) */
 
-	for (int i = 0; i < p_list->length - 2; i++) {
+	for (int i = 0; i < p_list->length - 2 && found == 0; i++) {
 
 		if (p_compare(p_data, cell_get_data(p_temp)) == 0) {
 
@@ -185,28 +184,21 @@ void ldc_display_asc(struct Ldc* p_list, void (*p_display)(void* p_data)) {
 
 	/* Verifier si la liste existe et qu'elle contient au moins 1 donnee */
 
-	if (p_list != NULL && p_list->length > 2) {
+	if (p_list == NULL || p_list->length <= 2) return;
 
-		/* Debuter l'affichage à la cellule suivant la tete de liste: la cellule contenant la premiere donnee */
+	/* Debuter l'affichage à la cellule suivant la tete de liste: la cellule contenant la premiere donnee */
 
-		struct Cell* p_temp = cell_return_next(p_list->p_head);
+	struct Cell* p_temp = cell_return_next(p_list->p_head);
 
-		printf("\n**********AFFICHAGE ORDRE CROISSANT**********\n");
+	printf("\n**********AFFICHAGE ORDRE CROISSANT**********\n");
 
-		/* Boucler autant de fois qu'il y a de cellules: longueur de liste moins 2 cellules fictives vides */
+	/* Boucler autant de fois qu'il y a de cellules: longueur de liste moins 2 cellules fictives vides */
 
-		for (int i = 0; i < p_list->length - 2; i++) {
+	for (int i = 0; i < p_list->length - 2; i++) {
 
-			cell_display(p_temp, p_display);
+		cell_display(p_temp, p_display);
 
-			p_temp = cell_return_next(p_temp);
-
-		}
-
-	}
-	else {
-
-		printf("\nLa liste est vide.\n");
+		p_temp = cell_return_next(p_temp);
 
 	}
 
@@ -214,26 +206,19 @@ void ldc_display_asc(struct Ldc* p_list, void (*p_display)(void* p_data)) {
 
 void ldc_display_desc(struct Ldc* p_list, void (*p_display)(void* p_data)) {
 
-	if (p_list != NULL && p_list->length > 2) {
+	if (p_list == NULL || p_list->length <= 2) return;
 
-		/* Debuter l'affichage à la cellule precendant la fin de liste: la cellule contenant la dernier donnee */
+	/* Debuter l'affichage à la cellule precendant la fin de liste: la cellule contenant la dernier donnee */
 
-		struct Cell* p_temp = cell_return_prev(p_list->p_tail);
+	struct Cell* p_temp = cell_return_prev(p_list->p_tail);
 
-		printf("\n**********AFFICHAGE ORDRE DECROISSANT**********\n");
+	printf("\n**********AFFICHAGE ORDRE DECROISSANT**********\n");
 
-		for (int i = 0; i < p_list->length - 2; i++) {
+	for (int i = 0; i < p_list->length - 2; i++) {
 
-			cell_display(p_temp, p_display);
+		cell_display(p_temp, p_display);
 
-			p_temp = cell_return_prev(p_temp);
-
-		}
-
-	}
-	else {
-
-		printf("\nLa liste est vide.\n");
+		p_temp = cell_return_prev(p_temp);
 
 	}
 
@@ -241,44 +226,42 @@ void ldc_display_desc(struct Ldc* p_list, void (*p_display)(void* p_data)) {
 
 void ldc_del(struct Ldc* p_list, void (*p_delete)(void* p_data)) {
 
-	if (p_list != NULL) {
+	if (p_list == NULL) return;
 
-		/* Debuter la suppression à la cellule suivant la tete de liste (premiere donnee) */
+	/* Debuter la suppression à la cellule suivant la tete de liste (premiere donnee) */
 
-		struct Cell* p_temp = cell_return_next(p_list->p_head);
+	struct Cell* p_temp = cell_return_next(p_list->p_head);
 
-		/* Boucler autant de fois qu'il y a de cellule non vide, 0 si la liste est vide */
+	/* Boucler autant de fois qu'il y a de cellule non vide, 0 si la liste est vide */
 
-		for (int i = 0; i < p_list->length - 2; i++) {
+	for (int i = 0; i < p_list->length - 2; i++) {
 
-			/* L'ordre des 3 operations suivantes est important:
-			   Si on commencait par l'operation 3, lors de l'operation 2, le pointeur p_temp pointerait
-			   vers une cellule ayant été supprimée (via cell_del(p_del))
+		/* L'ordre des 3 operations suivantes est important:
+			Si on commencait par l'operation 3, lors de l'operation 2, le pointeur p_temp pointerait
+			vers une cellule ayant été supprimée (via cell_del(p_del))
 
-			   1- Stocker le pointeur de la cellule en cours dans une variable intermediaire (del) */
+			1- Stocker le pointeur de la cellule en cours dans une variable intermediaire (del) */
 
-			struct Cell* p_del = p_temp;
+		struct Cell* p_del = p_temp;
 
-			/* 2- Passer à la cellule suivante */
+		/* 2- Passer à la cellule suivante */
 
-			p_temp = cell_return_next(p_temp);
+		p_temp = cell_return_next(p_temp);
 
-			/* 3- Supprimer la cellule courante */
+		/* 3- Supprimer la cellule courante */
 
-			cell_del(p_del, p_delete);
-
-		}
-
-		/* Supprimer les cellules fictives de tete et de fin de liste */
-
-		cell_del(p_list->p_head, NULL);
-		cell_del(p_list->p_tail, NULL);
-
-		/* Liberer l'espace memoire de la liste */
-
-		free(p_list);
-		p_list = NULL;
+		cell_del(p_del, p_delete);
 
 	}
+
+	/* Supprimer les cellules fictives de tete et de fin de liste */
+
+	cell_del(p_list->p_head, NULL);
+	cell_del(p_list->p_tail, NULL);
+
+	/* Liberer l'espace memoire de la liste */
+
+	free(p_list);
+	p_list = NULL;
 
 }

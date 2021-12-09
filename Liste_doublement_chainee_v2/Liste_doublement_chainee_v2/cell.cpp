@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "cell.h"
-#include "client.h"
 
 struct Cell* cell_new(void* p_data) {
 

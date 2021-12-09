@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cell.h"
-#include "client.h"
 
 struct Ldc* ldc_new(void);
 void ldc_insert(struct Ldc* p_list, void* p_data, int (*p_compare)(void* p_data1, void* p_data2));

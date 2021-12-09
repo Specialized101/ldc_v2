@@ -1,6 +1,5 @@
 #pragma once
 
-#include "client.h"
 
 struct Cell* cell_new(void* p_data);
 void cell_pointing_each_other(struct Cell* p_head, struct Cell* p_tail);
